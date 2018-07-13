@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="insuranceYellow" parent="android:Theme.DeviceDefault">
+        <item name="colorPrimaryDark">@android:color/black</item>
+        <item name="colorAccent">@android:color/darker_gray</item>
+        <item name="android:colorPrimary">@android:color/black</item>
+        <item name="android:colorAccent">@android:color/darker_gray</item>
+        <item name="android:colorPrimaryDark">@android:color/black</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="android:textColorPrimaryInverse">@color/colorPrimary</item>
+        <item name="android:colorBackground">@color/colorPrimary</item>
+        <item name="android:colorForeground">@android:color/black</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
+</resources>
