@@ -25,7 +25,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".accidentUserInfo" />
-        <activity android:name=".loginRegister"></activity>
+        <activity android:name=".loginRegister" />
+        <activity android:name=".InsurableViewerActivity"/>
     </application>
 
 </manifest>
