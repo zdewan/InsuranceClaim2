@@ -6,4 +6,5 @@ package com.insuranceclaim.insuranceclaim.Cards;
  */
 
 public abstract class CustomInsurableCard extends InsurableCard {
+
 }

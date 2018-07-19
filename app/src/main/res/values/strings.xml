@@ -13,4 +13,9 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <!-- Strings related to insurable cards-->
+    <string name="insurance_card_header">InsurableCard</string>
+    <string name="insurance_card_image_description">Card Logo</string>
+    <string name="insurance_card_description">Card Description</string>
 </resources>

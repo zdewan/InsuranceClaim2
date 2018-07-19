@@ -11,6 +11,5 @@
         <item name="android:textColorPrimaryInverse">@color/colorPrimary</item>
         <item name="android:colorBackground">@color/colorPrimary</item>
         <item name="android:colorForeground">@android:color/black</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 </resources>

@@ -1,6 +1,9 @@
 package com.insuranceclaim.insuranceclaim.Cards;
 
 import android.media.Image;
+import android.support.annotation.NonNull;
+
+import com.insuranceclaim.insuranceclaim.insurables.Insurable;
 
 /**
  * Created by kyrel_000 on 2018-06-21.
@@ -8,13 +11,48 @@ import android.media.Image;
  */
 
 public class AutomobileInsurableCard extends InsurableCard{
-    public final String[] ImportantTitles = {"VIN",""};
-    private String model;
-    private String make;
-    private String year;
-    private String insurerer;
+    //Main information (priority information) that each AutomobileInsurableCard must have
+    public final String[] priorityTitles = {"model","make","VIN","year", "insurer","owner", "company"
+            ,"phone", "policynumber", "coverage", "deductibles"};
+    public String[] priorityData = new String[priorityTitles.length];
+    public AutomobileInsurableCard( @NonNull Insurable insurable) {
+        super(insurable);
+        updateDataFromInsurable();
+        setHeader(getHeader());
+        setImportant(getImportant());
+        setLogo(getLogo());
+    }
+    public void getpriorityData(){
+
+    }
     @Override
     public String getHeader() {
+        String header = null;
+        if (insurable != null) {
+            header = insurable.getName();
+            if(header == null){
+                return "Auto:" + getinsurable().getSpecificData(priorityTitles[0]);
+            }
+        }
+        return header;
+    }
+
+    @Override
+    public void createInsurable(){
+         Insurable insurable = new Insurable();
+
+     }
+     //this is the lazy way
+     public void updateDataFromInsurable(){
+         for (int i = 0; i < priorityTitles.length; i ++){
+             priorityData[i] = insurable.getSpecificData(priorityTitles[i]);
+         }
+     }
+    @Override
+    public Image getLogo(){
+        return null;
+    }
+    public String getImportant(){
         String header = null;
         if (insurable != null) {
             header = insurable.getName();
@@ -23,17 +61,5 @@ public class AutomobileInsurableCard extends InsurableCard{
             }
         }
         return header;
-    }
-
-    @Override
-    public void createInsurable() {
-
-    }
-    @Override
-    public Image getLogo(){
-        return null;
-    }
-    public String getImportant(){
-        return null;
     }
 }

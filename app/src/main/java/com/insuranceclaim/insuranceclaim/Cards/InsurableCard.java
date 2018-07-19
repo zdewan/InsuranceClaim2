@@ -1,6 +1,7 @@
 package com.insuranceclaim.insuranceclaim.Cards;
 
 import android.media.Image;
+import android.support.annotation.NonNull;
 
 import com.insuranceclaim.insuranceclaim.insurables.Insurable;
 
@@ -11,16 +12,27 @@ import com.insuranceclaim.insuranceclaim.insurables.Insurable;
  * */
 
 public abstract class InsurableCard {
-    private String insurableType;
-    private String holder;
     private String header;
-    private String[] layout;
+    private String layout;
     private String important;
     private Image logo;
     Insurable insurable;
     /*
     Loads logo image from its assigned location.
      */
+
+    public InsurableCard(Insurable insurable) {
+        this.insurable = insurable;
+    }
+    public InsurableCard(String header, String layout, String important, Image logo, @NonNull Insurable insurable) {
+        this.header = header;
+        this.layout = layout;
+        this.important = important;
+        this.logo = logo;
+        this.insurable = insurable;
+
+    }
+
     public  void loadLogo (){
 
     }
@@ -36,6 +48,23 @@ public abstract class InsurableCard {
     Insurable getinsurable() {
         return insurable;
     }
+
+    public void setHeader(String header) {
+        this.header = header;
+    }
+
+    public void setLayout(String layout) {
+        this.layout = layout;
+    }
+
+    public void setImportant(String important) {
+        this.important = important;
+    }
+
+    public void setLogo(Image logo) {
+        this.logo = logo;
+    }
+
     public abstract Image getLogo();
     public abstract String getHeader();
     public abstract String getImportant();
