@@ -1,13 +1,18 @@
 package com.insuranceclaim.insuranceclaim.insurables;
 import java.util.ArrayList;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 /**
  * Created by kyrel_000 on 2018-07-09.
  * Originally created in InsuranceReport.
  */
 // This class is the actual harborer of data for the insurable, but the insurablecards will know
 // how to obtain data from these objects, only having 5 cards rendered at once maximum
-// in comfortable view and 10 in condensed view.
+// in comfortable view and 10 in condensed view
+
 public class Insurable {
 
     public enum insurableTypes {AUTOMOBILE, HOME, PERSONAL, HEALTH, CUSTOM}
@@ -17,9 +22,8 @@ public class Insurable {
     private String imageFile;
     private String name;
     private String id;// MUST BE INTERNALLY UNIQUE
-    private String primaryKey;//MUST BE INTERNALLY UNIQUE
-
-
+    private String customDataKey;
+    private String priorityDataKey;
     //ALL TITLES ARE UNIQUE, WHETHER THEY ARE PRIORITY OR NOT
     //Insurable-specific objects
     private ArrayList<String> priorityData;// This is data that MUST be in each insurable of that type.
@@ -36,13 +40,13 @@ public class Insurable {
         imageFile = null;
         name = null;
         id = null;
-        primaryKey = null;
         initInsurableArrayLists();
     }
     public Insurable(String name, String id, String primaryKey, insurableTypes type) {
         this.name = name;
         this.id = id;
-        this.primaryKey = primaryKey;
+        //TODO: primary key
+        //this.primaryKey = primaryKey;
         this.type = type;
         isDraft = true;
         initInsurableArrayLists();

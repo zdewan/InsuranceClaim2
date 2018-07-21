@@ -51,6 +51,7 @@ public class AutomobileInsurableCard extends InsurableCard{
     @Override
     public Image getLogo(){
         return null;
+        //TODO: CREATE A SYSTEM FOR LOGOS TO BE SELECTED FOR EACH CARD, OTHERWISE GET THE "LOGOCAR" IMAGE.
     }
     public String getImportant(){
         String header = null;
