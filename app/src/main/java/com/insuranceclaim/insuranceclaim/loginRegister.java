@@ -30,8 +30,8 @@ public class loginRegister extends AppCompatActivity {
         bRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String Email =etEmail.getText().toString();
-                final String Pass =etPass.getText().toString();
+                final String email =etEmail.getText().toString();
+                final String Password =etPass.getText().toString();
                 final String PassCon =etPassCon.getText().toString();
 
                 Response.Listener<String> responseListener = new Response.Listener<String>(){
@@ -59,7 +59,7 @@ public class loginRegister extends AppCompatActivity {
                 };
 
 
-                RegisterRequest registerRequest = new RegisterRequest(Email, Pass, PassCon, responseListener);
+                RegisterRequest registerRequest = new RegisterRequest(email, Password, PassCon, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(loginRegister.this);
                 queue.add(registerRequest);
 

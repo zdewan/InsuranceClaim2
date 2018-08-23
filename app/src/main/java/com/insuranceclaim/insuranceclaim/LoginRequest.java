@@ -6,16 +6,15 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegisterRequest extends StringRequest {
-    private static String REGISTER_REQUEST_URL = "http://infanticidal-lungs.000webhostapp.com/register.php";
+public class LoginRequest extends StringRequest {
+    private static String LOGIN_REQUEST_URL = "http://infanticidal-lungs.000webhostapp.com/login.php";
     private Map<String, String> params;
 
-    public RegisterRequest(String email, String Password, String PassCon, Response.Listener<String> listener){
-        super(Method.POST, REGISTER_REQUEST_URL, listener,null);
+    public LoginRequest(String email, String Password, Response.Listener<String> listener){
+        super(Method.POST, LOGIN_REQUEST_URL, listener,null);
         params = new HashMap<>();
         params.put("email", email);
         params.put("Password", Password);
-        params.put("PassCon", PassCon);
     }
 
     @Override
