@@ -30,39 +30,47 @@ public class loginRegister extends AppCompatActivity {
         bRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String email =etEmail.getText().toString();
-                final String Password =etPass.getText().toString();
-                final String PassCon =etPassCon.getText().toString();
+                final String email = etEmail.getText().toString();
+                final String Password = etPass.getText().toString();
+                final String PassCon = etPassCon.getText().toString();
 
-                Response.Listener<String> responseListener = new Response.Listener<String>(){
+                if (Password.equals(PassCon)) {
+                    Response.Listener<String> responseListener = new Response.Listener<String>() {
 
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonResponse = new JSONObject(response);
+                                boolean success = jsonResponse.getBoolean("success");
 
-                            if(success){
-                                Intent intent = new Intent(loginRegister.this, Login.class);
+                                if (success) {
+                                    Intent intent = new Intent(loginRegister.this, Login.class);
+                                } else {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(loginRegister.this);
+                                    builder.setMessage("Register Unsuccessful")
+                                            .setNegativeButton("Try Again", null)
+                                            .create()
+                                            .show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                            else{
-                                AlertDialog.Builder builder = new AlertDialog.Builder(loginRegister.this);
-                                builder.setMessage("Register Unsuccessful")
-                                        .setNegativeButton("Try Again", null)
-                                        .create()
-                                        .show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
-                    }
-                };
+                    };
 
 
-                RegisterRequest registerRequest = new RegisterRequest(email, Password, PassCon, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(loginRegister.this);
-                queue.add(registerRequest);
+                    RegisterRequest registerRequest = new RegisterRequest(email, Password, responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(loginRegister.this);
+                    queue.add(registerRequest);
 
+                }
+                else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(loginRegister.this);
+                    builder.setMessage("Passwords do not match!")
+                            .setNegativeButton("Try Again", null)
+                            .create()
+                            .show();
+                }
             }
         });
     }
