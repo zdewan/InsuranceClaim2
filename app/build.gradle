@@ -41,13 +41,12 @@ dependencies {
 
     // Lifecycle components
     def lifecycle_version = "1.1.1"
-        // ViewModel and LiveData
+    // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
-        //     Support library depends on this lightweight import
+    //     Support library depends on this lightweight import
     implementation "android.arch.lifecycle:runtime:$lifecycle_version"
     annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
-        // optional - Test helpers for LiveData
+    // optional - Test helpers for LiveData
     testImplementation "android.arch.core:core-testing:$lifecycle_version"
 
 }
-

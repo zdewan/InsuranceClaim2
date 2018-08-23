@@ -52,7 +52,7 @@ public class Login extends AppCompatActivity {
                             boolean success = jsonReponse.getBoolean("success");
 
                             if (success){
-                                Intent intent = new Intent(Login.this,accidentUserInfo.class);
+                                Intent intent = new Intent(Login.this,actionSelectionScreen.class);
                                 intent.putExtra("email",email);
 
                                 Login.this.startActivity(intent);
