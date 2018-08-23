@@ -1,7 +1,6 @@
 package com.insuranceclaim.insuranceclaim.Cards;
 
 import android.media.Image;
-import android.support.annotation.NonNull;
 
 import com.insuranceclaim.insuranceclaim.insurables.Insurable;
 
@@ -15,6 +14,11 @@ public class CustomInsurableCard extends InsurableCard {
 
     public CustomInsurableCard(Insurable insurable) {
         super(insurable);
+    }
+
+    @Override
+    public String[] getPriorityFields() {
+        return new String[0];
     }
 
     @Override

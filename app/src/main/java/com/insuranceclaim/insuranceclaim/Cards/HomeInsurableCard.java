@@ -2,7 +2,6 @@ package com.insuranceclaim.insuranceclaim.Cards;
 
 import android.media.Image;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.insuranceclaim.insuranceclaim.insurables.Insurable;
 
@@ -10,14 +9,13 @@ import com.insuranceclaim.insuranceclaim.insurables.Insurable;
  * Created by kyrel_000 on 2018-06-21.
  * Originally created in InsuranceReport.
  */
-
-public class AutomobileInsurableCard extends InsurableCard{
+//TODO: FORMAT CARD TO BE OF THIS CARD TYPE
+public class HomeInsurableCard extends InsurableCard{
     //Main information (priority information) that each AutomobileInsurableCard must have
-    public final String TAG = "AutoInsurableCard";
     public final String[] priorityTitles = {"model","make","VIN","year", "insurer","owner", "company"
             ,"phone", "policynumber", "coverage", "deductibles"};
     public String[] priorityData = new String[priorityTitles.length];
-    public AutomobileInsurableCard( @NonNull Insurable insurable) {
+    public HomeInsurableCard(@NonNull Insurable insurable) {
         super(insurable);
         updateDataFromInsurable();
         setHeader(getHeader());
@@ -34,23 +32,17 @@ public class AutomobileInsurableCard extends InsurableCard{
 
     }
     @Override
-
     public String getHeader() {
         String header = null;
-        if (insurable != null){
+        if (insurable != null) {
             header = insurable.getName();
             if(header == null){
-                header = "Auto:" + getInsurable().getSpecificData(priorityTitles[0]);
-                return header;
+                return "Auto:" + getInsurable().getSpecificData(priorityTitles[0]);
             }
-        }
-
-        if(insurable == null)
-        {
-            Log.e(TAG, "getHeader: Failed to return non-null Header. ");
         }
         return header;
     }
+
     @Override
     public void createInsurable(){
          Insurable insurable = new Insurable();
@@ -68,13 +60,13 @@ public class AutomobileInsurableCard extends InsurableCard{
         //TODO: CREATE A SYSTEM FOR LOGOS TO BE SELECTED FOR EACH CARD, OTHERWISE GET THE "LOGOCAR" IMAGE.
     }
     public String getImportant(){
-        String important = null;
+        String header = null;
         if (insurable != null) {
-            important = insurable.getName();
-            if(important == null){
+            header = insurable.getName();
+            if(header == null){
                 return "Auto:" + getInsurable().getSpecificData("model");
             }
         }
-        return important;
+        return header;
     }
 }

@@ -1,203 +1,331 @@
 package com.insuranceclaim.insuranceclaim.insurables;
-import java.util.ArrayList;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.Relation;
+
 import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.insuranceclaim.insuranceclaim.Cards.AutomobileInsurableCard;
+import com.insuranceclaim.insuranceclaim.Cards.CustomInsurableCard;
+import com.insuranceclaim.insuranceclaim.Cards.DentalInsurableCard;
+import com.insuranceclaim.insuranceclaim.Cards.HealthInsurableCard;
+import com.insuranceclaim.insuranceclaim.Cards.InsurableCard;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Created by kyrel_000 on 2018-07-09.
- * Originally created in InsuranceReport.
+ * Created by kyrel_000 on 2018-08-01.
+ * Originally created in InsuranceClaim2.
  */
-// This class is the actual harborer of data for the insurable, but the insurablecards will know
-// how to obtain data from these objects, only having 5 cards rendered at once maximum
-// in comfortable view and 10 in condensed view
-
+@Entity(tableName = "insurable_table")
 public class Insurable {
+    static final String TAG = "Insurable.class";
+    public enum InsurableTypes
+            {AUTOMOBILE, HOME,
+            HEALTH, PERSONAL,
+            DENTAL, CUSTOM,
+            TEMPLATED};
 
-    public enum insurableTypes {AUTOMOBILE, HOME, PERSONAL, HEALTH, CUSTOM}
-    private insurableTypes type;
-    private boolean isDraft;
-    private boolean isSaved;
-    private String imageFile;
-    private String name;
-    private String id;// MUST BE INTERNALLY UNIQUE
-    private String customDataKey;
-    private String priorityDataKey;
-    //ALL TITLES ARE UNIQUE, WHETHER THEY ARE PRIORITY OR NOT
-    //Insurable-specific objects
-    private ArrayList<String> priorityData;// This is data that MUST be in each insurable of that type.
-    private ArrayList<String> priorityDataTitles;
-    private ArrayList<String> priorityDisplayCategories;
-    private ArrayList<String> customData;
-    private ArrayList<String> customDataTitles;// Titles are labels for the data to be used as headers or hoverables
-    private ArrayList<String> customDisplayCategories;// Category of display, allows for tags to be created as csv
-
-    //Initialization aids
+    //CONSTRUCTORS
     public Insurable() {
-        isDraft = true;
+        isEncrypted = false;
         isSaved = false;
-        imageFile = null;
         name = null;
-        id = null;
         initInsurableArrayLists();
     }
-    public Insurable(String name, String id, String primaryKey, insurableTypes type) {
+    public Insurable(@NonNull int ID, @NonNull String name, InsurableTypes type, @NonNull String templateID) {
+        this.ID = ID;
         this.name = name;
-        this.id = id;
-        //TODO: primary key
-        //this.primaryKey = primaryKey;
-        this.type = type;
-        isDraft = true;
+        this.cardType = type.name();
+        this.updateTimestamp = System.currentTimeMillis();
+        TemplateID = templateID;
         initInsurableArrayLists();
-
     }
     private void initInsurableArrayLists(){
-        priorityData = new ArrayList<>();// This is data that MUST be in each insurable of that type.
-        priorityDataTitles = new ArrayList<>();
-        priorityDisplayCategories = new ArrayList<>();
-        customDataTitles = new ArrayList<>();// Titles are labels for the data to be used as headers or hoverables
-        customData = new ArrayList<>();
-        customDisplayCategories = new ArrayList<>();
+        data = new ArrayList<>();
     }
-    //TODO: Add functions that write new data to the insurable
-    //TODO: Solidify insurable structure.
-    // Get data required for saving, this is data every card has, regardless of type.
-    public String getName(){
+
+    public static InsurableCard generateCard(Insurable insurable){
+        Log.d(TAG,"Creating card of type:" + insurable.getCardType());
+
+        switch(insurable.getCardTypeAsType()){
+            case AUTOMOBILE:
+                Log.d(TAG,"AUTOMOBILE card generated.");
+                return new AutomobileInsurableCard(insurable);
+            case HOME:
+                Log.d(TAG,"Health card generated.");
+                return  new HealthInsurableCard(insurable);
+            case CUSTOM:
+                return new CustomInsurableCard(insurable);
+            case DENTAL:
+                return new DentalInsurableCard(insurable);
+            case TEMPLATED:
+                Log.d(TAG,"TEMPLATED card generated.");
+
+                return new CustomInsurableCard(insurable);
+            default:
+                Log.d(TAG,"default card(custom) generated.");
+
+                return new CustomInsurableCard(insurable);
+        }
+    }
+    //MEMBERS
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @ColumnInfo(typeAffinity = ColumnInfo.INTEGER)
+    private int ID;
+    @NonNull
+    @ColumnInfo(typeAffinity = ColumnInfo.INTEGER)
+    private boolean isEncrypted;
+    @NonNull
+    @ColumnInfo(typeAffinity = ColumnInfo.INTEGER)
+    private int AccountID;
+    @NonNull
+    @ColumnInfo (typeAffinity = ColumnInfo.TEXT)
+    private String name;
+    @NonNull
+    @ColumnInfo (typeAffinity = ColumnInfo.TEXT)
+    private String cardType;
+
+    @NonNull
+    @ColumnInfo(typeAffinity = ColumnInfo.INTEGER)
+    private long updateTimestamp;
+
+    @NonNull
+    private String TemplateID;
+    @Ignore
+    //@Relation(parentColumn = "ID", entityColumn = "insurableID")
+    private List<InsurableDataField> data;
+    @Ignore
+    private boolean isSaved = false;
+    /*****ASSORTED SETTERS AND GETTERS******/
+    @NonNull
+    public int getID() {
+        return ID;
+    }
+    public void setID(@NonNull int ID) {
+        this.ID = ID;
+    }
+    @NonNull
+    public boolean isEncrypted() {
+        return isEncrypted;
+    }
+    public void setEncrypted(@NonNull boolean encrypted) {
+        isEncrypted = encrypted;
+    }
+    @NonNull
+    public int getAccountID() {
+        return AccountID;
+    }
+    public void setAccountID(@NonNull int accountID) {
+        AccountID = accountID;
+    }
+    @NonNull
+    public String getName() {
         return name;
     }
-    public String getId(){
-        return id;
+    public void setName(@NonNull String name) {
+        this.name = name;
     }
-    public boolean getIsDraft() {
-        return isDraft;
+    @NonNull
+    public String getCardTypeAsString() {
+        return cardType;
     }
-//*****************DATA ENTRY AND HANDLING METHODS************************************//
-    //************Priority data methods are not labelled as such*****************
+    public InsurableTypes getCardTypeAsType(){
+       for(InsurableTypes type: InsurableTypes.values()){
+           if(type.name() == cardType.toUpperCase())
+           {
+               return type;
+           }
+       }
+       return InsurableTypes.CUSTOM;
+    }
+    public String getCardType(){
+        return cardType;
+    }
+    public void setCardType(@NonNull String cardType) {
+        this.cardType = cardType;
+    }
+    @NonNull
+    public long getUpdateTimestamp() {
+        return updateTimestamp;
+    }
+    public void setUpdateTimestamp(@NonNull long updateTimestamp) {
+        this.updateTimestamp = updateTimestamp;
+    }
+    @NonNull
+    public String getTemplateID() {
+        return TemplateID;
+    }
+    public void setTemplateID(@NonNull String templateID) {
+        TemplateID = templateID;
+    }
+    public boolean isSaved() {
+        return isSaved;
+    }
+
+    public void setSaved(boolean saved) {
+        isSaved = saved;
+    }
+
+    /*****BOOLEAN OPERATORS*****/
     public boolean doesTitleExist(String title){
-        for (String currentString:priorityDataTitles){
-            if(currentString.equals(title))
-            {
-                return true;
-            }
-        }
-            return false;
-    }
-    public boolean doesCustomTitleExist(String title){
-        for (String currentString:customDataTitles){
-            if(currentString.equals(title))
+        for (int i = 0; i < data.size();i ++){
+            if((!data.get(i).isCustom() )&& data.get(i).getTitle().equals(title))
             {
                 return true;
             }
         }
         return false;
+    }
+    public boolean doesCustomTitleExist(String title){
+        for (int i = 0; i < data.size();i ++){
+            if(data.get(i).isCustom() && data.get(i).getTitle().equals(title))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //TODO: CHECK ALL LOGIC IN METHODS.
+    //***************DATA SETTING/ CHANGING METHODS********************************//
+    private boolean addDataField(InsurableDataField datafield){
+        if(!doesTitleExist(datafield.getTitle())){
+            data.add(datafield);
+            return true;
+        }
+        return false;
+    }
+    public void setAllDataFields(List<InsurableDataField> data){
+        this.data = data;
     }
     private boolean addData(String title,String type, String data)
     {
         if(!doesTitleExist(title)){
-            priorityData.add(data);
-            priorityDataTitles.add(title);
-            priorityDisplayCategories.add(type);
+            InsurableDataField newLine = new InsurableDataField(ID, title, type, false, null, data);
+            this.data.add(newLine);
             return true;
         }
         return false;
     }
+
     private boolean addCustomData(String title,String type, String data)
     {
         if(!doesCustomTitleExist(title)){
-            customData.add(data);
-            customDataTitles.add(title);
-            customDisplayCategories.add(type);
+            InsurableDataField newLine = new InsurableDataField(ID, title, type, true, null, data);
+            this.data.add(newLine);
             return true;
         }
         return false;
     }
-    public boolean deleteEntry(String title,String type, String data)
+    public boolean deleteEntry(String title)
     {
-        for(int x = 0; x < priorityDataTitles.size(); x ++){
-            if (priorityDataTitles.get(x).equals(title)){
-                priorityDataTitles.remove(x);
-                priorityData.remove(x);
-                priorityDisplayCategories.remove(x);
+        for(int x = 0; x < data.size(); x ++){
+            if (data.get(x).getTitle().equals(title)){
+                data.remove(x);
                 return true;
             }
         }
         return false;
     }
-    public boolean deleteCustomEntry(String title,String type, String data)
+    public boolean deleteCustomEntry(String title)
     {
-        for(int x = 0; x < customDataTitles.size(); x ++){
-            if (customDataTitles.get(x).equals(title)){
-                customDataTitles.remove(x);
-                customData.remove(x);
-                customDisplayCategories.remove(x);
+        for(int x = 0; x < data.size(); x ++){
+            if (data.get(x).getTitle().equals(title)){
+                data.remove(x);
                 return true;
             }
         }
         return false;
     }
     public boolean updateData(String title,String type, String data) {
-        for (int x = 0; x < priorityDataTitles.size(); x++) {
-            if (priorityDataTitles.get(x).equals(title)) {
-                priorityData.set(x, data);
-                priorityDisplayCategories.set(x, data);
+        for (int x = 0; x < this.data.size(); x++) {
+            if (this.data.get(x).getTitle().equals(title) &&!this.data.get(x).isCustom()) {
+                this.data.get(x).setData(data);
+                this.data.get(x).setDataType(data);
                 return true;
             }
         }
-        return addData( title, type, data);
+        return addData(title, type, data);
     }
     public boolean updateCustomData(String title,String type, String data) {
-        for (int x = 0; x < customDataTitles.size(); x++) {
-            if (customDataTitles.get(x).equals(title)) {
-                customData.set(x, data);
-                customDisplayCategories.set(x, data);
+        for (int x = 0; x < this.data.size(); x++) {
+            if (this.data.get(x).getTitle().equals(title)&& this.data.get(x).isCustom()) {
+                this.data.get(x).setData(data);
+                this.data.get(x).setDataType(data);
                 return true;
             }
         }
         return addCustomData( title, type, data);
     }
 
-//***************DATA RETRIEVAL METHODS*****************************************//
+    //***************DATA RETRIEVAL METHODS*****************************************//
     //Returns the specific data entry aligned with an identical title
-    public String getSpecificData(String title){
-        for(int index  = 0; index <  priorityDataTitles.size();  index ++)
+    public InsurableDataField getSpecificDataObj(String title){
+        for(int index  = 0; index <  data.size();  index ++)
         {
-            if(priorityDataTitles.get(index).equals(title)){
-                return priorityData.get(index);
+            if(data.get(index).getTitle().equals(title) &&!data.get(index).isCustom()){
+                return data.get(index);
+            }
+        }
+        return null;
+    }
+    public InsurableDataField getSpecificCustomDataObj(String title){
+        for(int index  = 0; index <  data.size();  index ++)
+        {
+            if(data.get(index).getTitle().equals(title)&& data.get(index).isCustom()){
+                return data.get(index);
+            }
+        }
+        return null;
+    }
+    public String getSpecificData(String title){
+        for(int index  = 0; index <  data.size();  index ++)
+        {
+            if(data.get(index).getTitle().equals(title) &&!data.get(index).isCustom()){
+                return data.get(index).getData();
             }
         }
         return null;
     }
     public String getSpecificCustomData(String title){
-        for(int index  = 0; index <  customDataTitles.size();  index ++)
+        for(int index  = 0; index <  data.size();  index ++)
         {
-            if(customDataTitles.get(index).equals(title)){
-                return customData.get(index);
+            if(data.get(index).getTitle().equals(title)&& data.get(index).isCustom()){
+                return data.get(index).getData();
             }
         }
         return null;
     }
 
     //Returns the type of the data entry aligned with "title" as a string
-    public String getDataType(String title){
-        for(int index  = 0; index <  priorityDataTitles.size();  index ++)
+    public String getpriorityDataType(String title){
+        for(int index  = 0; index <  data.size();  index ++)
         {
-            if(priorityDataTitles.get(index).equals(title)){
-                return priorityDisplayCategories.get(index);
+            if(data.get(index).getTitle().equals(title) &&!data.get(index).isCustom()){
+                return data.get(index).getDataType();
+            }
+        }
+        return null;
+    }
+    public String getCustomDataType(String title){
+        for(int index  = 0; index <  data.size();  index ++)
+        {
+            if(data.get(index).getTitle().equals(title) &&data.get(index).isCustom()){
+                return data.get(index).getDataType();
             }
         }
         return null;
     }
     //Returns entire list of data
-    public ArrayList<String> getData(){
-        return priorityData;
-    }
-    public ArrayList<String> getCustomData(){
-        return customData;
-    }
-
-    public void saveInsurable(){
-        //TODO: Complete method to save data
+    public List<InsurableDataField> getData(){
+        return data;
     }
 
 }

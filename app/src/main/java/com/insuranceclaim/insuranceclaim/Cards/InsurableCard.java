@@ -42,10 +42,7 @@ public abstract class InsurableCard {
 
         //specialLoad();
     }
-    protected void setinsurable(Insurable insurable){
-        this.insurable = insurable;
-    }
-    Insurable getinsurable() {
+    public Insurable getInsurable() {
         return insurable;
     }
 
@@ -64,7 +61,7 @@ public abstract class InsurableCard {
     public void setLogo(Image logo) {
         this.logo = logo;
     }
-
+    public abstract String[] getPriorityFields();
     public abstract Image getLogo();
     public abstract String getHeader();
     public abstract String getImportant();
